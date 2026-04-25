@@ -1,0 +1,380 @@
+# UI Ace Design Browser Implementation Plan
+
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+
+**Goal:** Build a single `index.html` file that lets users browse 58 company design styles with a slide-in iframe preview panel, styled with the Airbnb design system.
+
+**Architecture:** Pure HTML/CSS/JS single file. The homepage lists all 58 companies as cards (with favicons from Google's favicon service). Clicking a card slides in a panel from the right containing an iframe pointed at the existing `design-md/<company>/preview.html` or `preview-dark.html`. No build tools, no npm.
+
+**Tech Stack:** HTML5, CSS3 (custom properties, grid, transitions), vanilla JS (ES6), Google Fonts (Nunito Sans), Google Favicon service
+
+---
+
+## File Map
+
+| File | Action | Responsibility |
+|------|--------|----------------|
+| `index.html` | Create | Entire application — HTML structure, CSS, JS |
+| `.gitignore` | Create | Exclude `.superpowers/` from git |
+
+---
+
+### Task 1: Git init and project scaffolding
+
+**Files:**
+- Create: `.gitignore`
+- Run: `git init` + initial commit
+
+- [ ] **Step 1: Initialize git repo**
+
+```bash
+cd "G:/claude/project/UI_Ace"
+git init
+```
+
+Expected output: `Initialized empty Git repository in G:/claude/project/UI_Ace/.git/`
+
+- [ ] **Step 2: Create .gitignore**
+
+Create `G:/claude/project/UI_Ace/.gitignore` with this content:
+
+```
+.superpowers/
+```
+
+- [ ] **Step 3: Add remote and stage files**
+
+```bash
+cd "G:/claude/project/UI_Ace"
+git remote add origin https://github.com/YMUNick/UIACE.git
+git add .gitignore docs/
+git commit -m "chore: init repo with gitignore and design spec/plan"
+```
+
+---
+
+### Task 2: HTML skeleton + Airbnb CSS + header + hero
+
+**Files:**
+- Create: `index.html`
+
+- [ ] **Step 1: Create index.html with full structure**
+
+Create `G:/claude/project/UI_Ace/index.html`:
+
+```html
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UI Ace — Design Style Browser</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,400;0,6..12,500;0,6..12,600;0,6..12,700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --white: #ffffff;
+    --near-black: #222222;
+    --rausch: #ff385c;
+    --secondary: #6a6a6a;
+    --disabled: #929292;
+    --border: #ebebeb;
+    --surface: #f2f2f2;
+    --shadow-card: rgba(0,0,0,0.02) 0px 0px 0px 1px, rgba(0,0,0,0.04) 0px 2px 6px, rgba(0,0,0,0.1) 0px 4px 8px;
+    --shadow-hover: rgba(0,0,0,0.08) 0px 4px 12px;
+    --font: 'Nunito Sans', -apple-system, system-ui, sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--white); color: var(--near-black); font-family: var(--font); font-size: 14px; -webkit-font-smoothing: antialiased; }
+
+  /* Header */
+  .nav { position: sticky; top: 0; z-index: 50; display: flex; align-items: center; padding: 0 24px; height: 64px; background: var(--white); border-bottom: 1px solid var(--border); }
+  .nav-brand { font-size: 22px; font-weight: 700; color: var(--rausch); text-decoration: none; letter-spacing: -0.5px; }
+
+  /* Hero */
+  .hero { padding: 48px 24px 32px; text-align: center; }
+  .hero h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.44px; margin-bottom: 8px; }
+  .hero p { font-size: 16px; color: var(--secondary); margin-bottom: 24px; }
+  .search { width: 100%; max-width: 480px; padding: 12px 20px; border: 1px solid var(--border); border-radius: 100px; font-family: var(--font); font-size: 15px; color: var(--near-black); outline: none; transition: border-color 0.15s, box-shadow 0.15s; }
+  .search:focus { border-color: var(--near-black); box-shadow: 0 0 0 2px rgba(34,34,34,0.08); }
+  .search::placeholder { color: var(--disabled); }
+
+  /* Grid */
+  .grid-wrap { max-width: 1200px; margin: 0 auto; padding: 16px 24px 64px; }
+  .company-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; }
+
+  /* Card */
+  .card { background: var(--white); border-radius: 14px; box-shadow: var(--shadow-card); padding: 24px 16px 20px; display: flex; flex-direction: column; align-items: center; gap: 12px; cursor: pointer; transition: box-shadow 0.2s, transform 0.2s; }
+  .card:hover { box-shadow: var(--shadow-hover); transform: translateY(-2px); }
+  .card img { width: 40px; height: 40px; border-radius: 8px; object-fit: contain; }
+  .card-name { font-size: 13px; font-weight: 600; color: var(--near-black); text-align: center; }
+
+  /* Backdrop */
+  .backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 100; }
+  .backdrop.open { display: block; }
+
+  /* Panel */
+  .panel { position: fixed; top: 0; right: 0; width: 85vw; height: 100vh; background: var(--white); box-shadow: -4px 0 24px rgba(0,0,0,0.15); transform: translateX(100%); transition: transform 300ms ease; z-index: 101; display: flex; flex-direction: column; }
+  .panel.open { transform: translateX(0); }
+
+  /* Panel bar */
+  .panel-bar { flex-shrink: 0; height: 48px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; border-bottom: 1px solid var(--border); gap: 12px; }
+  .panel-info { display: flex; align-items: center; gap: 8px; min-width: 0; }
+  .panel-favicon { width: 20px; height: 20px; border-radius: 4px; flex-shrink: 0; }
+  .panel-name { font-size: 14px; font-weight: 600; color: var(--near-black); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  /* Toggle pill */
+  .toggle-pill { display: flex; background: var(--surface); border-radius: 100px; padding: 3px; gap: 2px; flex-shrink: 0; }
+  .toggle-btn { padding: 4px 14px; border: none; border-radius: 100px; font-family: var(--font); font-size: 13px; font-weight: 500; cursor: pointer; background: transparent; color: var(--secondary); transition: background 0.15s, color 0.15s; }
+  .toggle-btn.active { background: var(--rausch); color: var(--white); }
+
+  /* Close button */
+  .close-btn { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border); background: var(--white); font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--near-black); transition: background 0.15s; }
+  .close-btn:hover { background: var(--surface); }
+
+  /* iframe */
+  #preview { flex: 1; width: 100%; border: none; }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <a class="nav-brand" href="#">UI Ace</a>
+</header>
+
+<section class="hero">
+  <h1>Browse Design Styles</h1>
+  <p>58 company design systems — light &amp; dark</p>
+  <input class="search" id="search" type="text" placeholder="Search companies..." oninput="filterCards(this.value)">
+</section>
+
+<div class="grid-wrap">
+  <div class="company-grid" id="grid"></div>
+</div>
+
+<div class="backdrop" id="backdrop" onclick="closePanel()"></div>
+
+<div class="panel" id="panel">
+  <div class="panel-bar">
+    <div class="panel-info">
+      <img class="panel-favicon" id="panelFavicon" src="" alt="">
+      <span class="panel-name" id="panelName"></span>
+    </div>
+    <div class="toggle-pill">
+      <button class="toggle-btn active" id="btnLight" onclick="setMode('light')">Light</button>
+      <button class="toggle-btn" id="btnDark" onclick="setMode('dark')">Dark</button>
+    </div>
+    <button class="close-btn" onclick="closePanel()">&#x2715;</button>
+  </div>
+  <iframe id="preview" src="" title="Design preview"></iframe>
+</div>
+
+<script>
+const COMPANIES = [
+  { folder: 'airbnb',       name: 'Airbnb',       domain: 'airbnb.com' },
+  { folder: 'airtable',     name: 'Airtable',     domain: 'airtable.com' },
+  { folder: 'apple',        name: 'Apple',         domain: 'apple.com' },
+  { folder: 'bmw',          name: 'BMW',           domain: 'bmw.com' },
+  { folder: 'cal',          name: 'Cal.com',       domain: 'cal.com' },
+  { folder: 'claude',       name: 'Claude',        domain: 'claude.ai' },
+  { folder: 'clay',         name: 'Clay',          domain: 'clay.run' },
+  { folder: 'clickhouse',   name: 'ClickHouse',    domain: 'clickhouse.com' },
+  { folder: 'cohere',       name: 'Cohere',        domain: 'cohere.com' },
+  { folder: 'coinbase',     name: 'Coinbase',      domain: 'coinbase.com' },
+  { folder: 'composio',     name: 'Composio',      domain: 'composio.io' },
+  { folder: 'cursor',       name: 'Cursor',        domain: 'cursor.com' },
+  { folder: 'elevenlabs',   name: 'ElevenLabs',    domain: 'elevenlabs.io' },
+  { folder: 'expo',         name: 'Expo',          domain: 'expo.dev' },
+  { folder: 'ferrari',      name: 'Ferrari',       domain: 'ferrari.com' },
+  { folder: 'figma',        name: 'Figma',         domain: 'figma.com' },
+  { folder: 'framer',       name: 'Framer',        domain: 'framer.com' },
+  { folder: 'hashicorp',    name: 'HashiCorp',     domain: 'hashicorp.com' },
+  { folder: 'ibm',          name: 'IBM',           domain: 'ibm.com' },
+  { folder: 'intercom',     name: 'Intercom',      domain: 'intercom.com' },
+  { folder: 'kraken',       name: 'Kraken',        domain: 'kraken.com' },
+  { folder: 'lamborghini',  name: 'Lamborghini',   domain: 'lamborghini.com' },
+  { folder: 'linear.app',   name: 'Linear',        domain: 'linear.app' },
+  { folder: 'lovable',      name: 'Lovable',       domain: 'lovable.dev' },
+  { folder: 'minimax',      name: 'MiniMax',       domain: 'minimaxi.com' },
+  { folder: 'mintlify',     name: 'Mintlify',      domain: 'mintlify.com' },
+  { folder: 'miro',         name: 'Miro',          domain: 'miro.com' },
+  { folder: 'mistral.ai',   name: 'Mistral',       domain: 'mistral.ai' },
+  { folder: 'mongodb',      name: 'MongoDB',       domain: 'mongodb.com' },
+  { folder: 'notion',       name: 'Notion',        domain: 'notion.so' },
+  { folder: 'nvidia',       name: 'NVIDIA',        domain: 'nvidia.com' },
+  { folder: 'ollama',       name: 'Ollama',        domain: 'ollama.com' },
+  { folder: 'opencode.ai',  name: 'OpenCode',      domain: 'opencode.ai' },
+  { folder: 'pinterest',    name: 'Pinterest',     domain: 'pinterest.com' },
+  { folder: 'posthog',      name: 'PostHog',       domain: 'posthog.com' },
+  { folder: 'raycast',      name: 'Raycast',       domain: 'raycast.com' },
+  { folder: 'renault',      name: 'Renault',       domain: 'renault.com' },
+  { folder: 'replicate',    name: 'Replicate',     domain: 'replicate.com' },
+  { folder: 'resend',       name: 'Resend',        domain: 'resend.com' },
+  { folder: 'revolut',      name: 'Revolut',       domain: 'revolut.com' },
+  { folder: 'runwayml',     name: 'Runway',        domain: 'runwayml.com' },
+  { folder: 'sanity',       name: 'Sanity',        domain: 'sanity.io' },
+  { folder: 'sentry',       name: 'Sentry',        domain: 'sentry.io' },
+  { folder: 'spacex',       name: 'SpaceX',        domain: 'spacex.com' },
+  { folder: 'spotify',      name: 'Spotify',       domain: 'spotify.com' },
+  { folder: 'stripe',       name: 'Stripe',        domain: 'stripe.com' },
+  { folder: 'supabase',     name: 'Supabase',      domain: 'supabase.com' },
+  { folder: 'superhuman',   name: 'Superhuman',    domain: 'superhuman.com' },
+  { folder: 'tesla',        name: 'Tesla',         domain: 'tesla.com' },
+  { folder: 'together.ai',  name: 'Together AI',   domain: 'together.ai' },
+  { folder: 'uber',         name: 'Uber',          domain: 'uber.com' },
+  { folder: 'vercel',       name: 'Vercel',        domain: 'vercel.com' },
+  { folder: 'voltagent',    name: 'VoltAgent',     domain: 'voltagent.dev' },
+  { folder: 'warp',         name: 'Warp',          domain: 'warp.dev' },
+  { folder: 'webflow',      name: 'Webflow',       domain: 'webflow.com' },
+  { folder: 'wise',         name: 'Wise',          domain: 'wise.com' },
+  { folder: 'x.ai',         name: 'xAI',           domain: 'x.ai' },
+  { folder: 'zapier',       name: 'Zapier',        domain: 'zapier.com' },
+];
+
+let currentCompany = null;
+let currentMode = 'light';
+
+function faviconUrl(domain) {
+  return `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
+}
+
+function buildGrid() {
+  const grid = document.getElementById('grid');
+  grid.innerHTML = COMPANIES.map(c => `
+    <div class="card" data-company="${c.name.toLowerCase()}" onclick="openCompany('${c.folder}','${c.name}','${c.domain}')">
+      <img src="${faviconUrl(c.domain)}" alt="${c.name} logo" loading="lazy">
+      <span class="card-name">${c.name}</span>
+    </div>
+  `).join('');
+}
+
+function openCompany(folder, name, domain) {
+  currentCompany = { folder, name, domain };
+  currentMode = 'light';
+  document.getElementById('panelFavicon').src = faviconUrl(domain);
+  document.getElementById('panelName').textContent = name;
+  document.getElementById('btnLight').classList.add('active');
+  document.getElementById('btnDark').classList.remove('active');
+  document.getElementById('preview').src = `design-md/${folder}/preview.html`;
+  document.getElementById('panel').classList.add('open');
+  document.getElementById('backdrop').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closePanel() {
+  document.getElementById('panel').classList.remove('open');
+  document.getElementById('backdrop').classList.remove('open');
+  document.body.style.overflow = '';
+  document.getElementById('search').value = '';
+  filterCards('');
+  currentCompany = null;
+}
+
+function setMode(mode) {
+  if (!currentCompany) return;
+  currentMode = mode;
+  const file = mode === 'dark' ? 'preview-dark.html' : 'preview.html';
+  document.getElementById('preview').src = `design-md/${currentCompany.folder}/${file}`;
+  document.getElementById('btnLight').classList.toggle('active', mode === 'light');
+  document.getElementById('btnDark').classList.toggle('active', mode === 'dark');
+}
+
+function filterCards(query) {
+  const q = query.toLowerCase().trim();
+  document.querySelectorAll('.card').forEach(card => {
+    const match = card.dataset.company.includes(q);
+    card.style.display = match ? '' : 'none';
+  });
+}
+
+buildGrid();
+</script>
+</body>
+</html>
+```
+
+- [ ] **Step 2: Open in browser to verify layout**
+
+Open `G:/claude/project/UI_Ace/index.html` directly in a browser (double-click or drag to browser). Verify:
+- Header shows "UI Ace" in red
+- Hero shows headline, subtitle, search box
+- 58 company cards render in a grid with favicons (requires internet for favicons)
+- Cards have correct names
+
+- [ ] **Step 3: Commit**
+
+```bash
+cd "G:/claude/project/UI_Ace"
+git add index.html
+git commit -m "feat: add complete UI Ace design browser"
+```
+
+---
+
+### Task 3: Verify interactive behavior
+
+**Files:**
+- Verify: `index.html` (no edits expected)
+
+- [ ] **Step 1: Test search**
+
+Type a company name in the search box (e.g. "stripe"). Verify only matching cards remain visible. Clear the field — all cards reappear.
+
+- [ ] **Step 2: Test panel open/close**
+
+Click any card. Verify:
+- Panel slides in from the right (300ms animation)
+- Semi-transparent backdrop appears on the left
+- Panel top bar shows company favicon + name
+- Light button is active (red background)
+- iframe loads the company's `preview.html`
+
+Click the backdrop or `✕` button. Verify panel slides out and search clears.
+
+- [ ] **Step 3: Test light/dark toggle**
+
+Open any company. Click "Dark" in the toggle pill. Verify:
+- Dark button becomes active (red)
+- iframe reloads with `preview-dark.html`
+
+Click "Light". Verify it switches back.
+
+- [ ] **Step 4: Fix any issues found during verification**
+
+If any CSS or JS issues are found during Steps 1–3, fix them in `index.html` and commit:
+
+```bash
+cd "G:/claude/project/UI_Ace"
+git add index.html
+git commit -m "fix: resolve visual/interaction issues from verification"
+```
+
+Only commit if changes were actually made.
+
+---
+
+### Task 4: Push to GitHub
+
+**Files:**
+- No file changes
+
+- [ ] **Step 1: Stage and push all commits**
+
+```bash
+cd "G:/claude/project/UI_Ace"
+git push -u origin main
+```
+
+If the branch is `master` instead of `main`:
+
+```bash
+cd "G:/claude/project/UI_Ace"
+git push -u origin master
+```
+
+Expected output: branch tracking confirmed, objects pushed to `https://github.com/YMUNick/UIACE.git`
+
+- [ ] **Step 2: Verify on GitHub**
+
+Confirm the repo at `https://github.com/YMUNick/UIACE` shows `index.html`, `design-md/`, `.gitignore`, and `docs/`.
