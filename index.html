@@ -64,6 +64,10 @@
   .toggle-btn { padding: 4px 14px; border: none; border-radius: 100px; font-family: var(--font); font-size: 13px; font-weight: 500; cursor: pointer; background: transparent; color: var(--secondary); transition: background 0.15s, color 0.15s; }
   .toggle-btn.active { background: var(--rausch); color: var(--white); }
 
+  /* Download button */
+  .download-btn { display: inline-flex; align-items: center; gap: 5px; padding: 4px 12px; border: 1px solid var(--border); border-radius: 100px; font-family: var(--font); font-size: 12px; font-weight: 500; cursor: pointer; background: var(--white); color: var(--near-black); transition: background 0.15s, border-color 0.15s; white-space: nowrap; flex-shrink: 0; }
+  .download-btn:hover { background: var(--surface); border-color: var(--near-black); }
+
   /* Close button */
   .close-btn { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border); background: var(--white); font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--near-black); transition: background 0.15s; }
   .close-btn:hover { background: var(--surface); }
@@ -95,6 +99,7 @@
     <div class="panel-info">
       <img class="panel-favicon" id="panelFavicon" alt="">
       <span class="panel-name" id="panelName"></span>
+      <button class="download-btn" id="downloadBtn" onclick="downloadDesign()">&#8659; 下載 DESIGN.md</button>
     </div>
     <div class="toggle-pill">
       <button class="toggle-btn active" id="btnLight" onclick="setMode('light')">Light</button>
@@ -216,6 +221,18 @@ function setMode(mode) {
   document.getElementById('preview').src = `design-md/${currentCompany.folder}/${file}`;
   document.getElementById('btnLight').classList.toggle('active', mode === 'light');
   document.getElementById('btnDark').classList.toggle('active', mode === 'dark');
+}
+
+function downloadDesign() {
+  if (!currentCompany) return;
+  if (confirm(`確認下載 ${currentCompany.name} 的 DESIGN.md 嗎？`)) {
+    const a = document.createElement('a');
+    a.href = `design-md/${currentCompany.folder}/DESIGN.md`;
+    a.download = `${currentCompany.name}-DESIGN.md`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
 }
 
 function filterCards(query) {
