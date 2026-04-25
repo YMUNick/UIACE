@@ -100,9 +100,9 @@
       <button class="toggle-btn active" id="btnLight" onclick="setMode('light')">Light</button>
       <button class="toggle-btn" id="btnDark" onclick="setMode('dark')">Dark</button>
     </div>
-    <button class="close-btn" onclick="closePanel()">&#x2715;</button>
+    <button class="close-btn" aria-label="Close preview" onclick="closePanel()">&#x2715;</button>
   </div>
-  <iframe id="preview" src="" title="Design preview"></iframe>
+  <iframe id="preview" title="Design preview"></iframe>
 </div>
 
 <script>
@@ -177,11 +177,14 @@ function faviconUrl(domain) {
 function buildGrid() {
   const grid = document.getElementById('grid');
   grid.innerHTML = COMPANIES.map(c => `
-    <div class="card" data-company="${c.name.toLowerCase()}" onclick="openCompany('${c.folder}','${c.name}','${c.domain}')">
+    <div class="card" data-company="${c.name.toLowerCase()}" data-folder="${c.folder}" data-name="${c.name}" data-domain="${c.domain}">
       <img src="${faviconUrl(c.domain)}" alt="${c.name} logo" loading="lazy">
       <span class="card-name">${c.name}</span>
     </div>
   `).join('');
+  grid.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('click', () => openCompany(card.dataset.folder, card.dataset.name, card.dataset.domain));
+  });
 }
 
 function openCompany(folder, name, domain) {
