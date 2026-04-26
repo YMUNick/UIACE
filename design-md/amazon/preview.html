@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design System Preview: Amazon (Light)</title>
+<style>
+  :root {
+    --orange: #FF9900; --orange-dark: #E47911; --orange-light: #FFF3CD;
+    --navy: #232F3E; --navy-mid: #37475A; --navy-light: #485769;
+    --bg: #FFFFFF; --surface: #F7F8F8; --surface-2: #EAEDED;
+    --on-bg: #0F1111; --secondary: #565959; --disabled: #AAAAAA;
+    --border: #D5D9D9; --link: #007185; --error: #CC0C39;
+    --shadow-card: 0 2px 5px 0 rgba(213,217,217,0.5);
+    --shadow-hover: 0 2px 10px 0 rgba(0,0,0,0.15);
+    --font: 'Amazon Ember', Arial, sans-serif;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--on-bg); font-family:var(--font); font-size:14px; font-weight:400; line-height:1.5; -webkit-font-smoothing:antialiased; }
+
+  .nav { position:sticky; top:0; z-index:100; display:flex; align-items:center; justify-content:space-between; padding:8px 24px; background:var(--navy); gap:16px; }
+  .nav-brand { font-size:20px; font-weight:700; color:#FFFFFF; text-decoration:none; letter-spacing:-0.3px; }
+  .nav-brand span { color:var(--orange); }
+  .nav-links { display:flex; gap:16px; list-style:none; }
+  .nav-links a { font-size:13px; font-weight:400; color:#FFFFFF; text-decoration:none; white-space:nowrap; }
+  .nav-links a:hover { text-decoration:underline; }
+  .nav-cta { background:var(--orange); color:var(--on-bg); padding:6px 14px; border-radius:3px; font-size:13px; font-weight:700; text-decoration:none; white-space:nowrap; }
+
+  .hero { padding:48px 24px; text-align:center; background:var(--surface); border-bottom:1px solid var(--border); }
+  .hero h1 { font-size:26px; font-weight:700; margin-bottom:10px; }
+  .hero h1 span { color:var(--orange-dark); }
+  .hero p { font-size:15px; color:var(--secondary); max-width:480px; margin:0 auto 24px; }
+  .hero-buttons { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+
+  .btn-primary  { display:inline-block; background:var(--orange); color:var(--on-bg); padding:9px 20px; border-radius:3px; font-family:var(--font); font-size:13px; font-weight:700; text-decoration:none; border:1px solid #C45500; cursor:pointer; }
+  .btn-secondary { display:inline-block; background:var(--surface-2); color:var(--on-bg); padding:9px 20px; border-radius:3px; border:1px solid var(--border); font-family:var(--font); font-size:13px; font-weight:400; text-decoration:none; cursor:pointer; }
+  .btn-link { display:inline-block; background:transparent; color:var(--link); padding:9px 12px; font-family:var(--font); font-size:13px; font-weight:400; text-decoration:none; border:none; cursor:pointer; }
+
+  .section { padding:40px 24px; max-width:1100px; margin:0 auto; }
+  .section-label { font-size:11px; font-weight:700; color:var(--secondary); text-transform:uppercase; letter-spacing:0.8px; margin-bottom:8px; }
+  .section-title { font-size:20px; font-weight:700; margin-bottom:24px; }
+  .section-divider { border:none; border-top:1px solid var(--border); margin:0; }
+
+  .color-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(145px,1fr)); gap:10px; margin-bottom:20px; }
+  .color-swatch { border-radius:4px; overflow:hidden; border:1px solid var(--border); }
+  .color-swatch-block { height:64px; width:100%; }
+  .color-swatch-info { padding:10px; background:var(--bg); }
+  .color-swatch-name { font-size:12px; font-weight:700; margin-bottom:2px; }
+  .color-swatch-hex { font-size:10px; color:var(--secondary); font-family:monospace; }
+  .color-swatch-role { font-size:9px; color:var(--disabled); margin-top:2px; }
+  .color-group-label { font-size:12px; font-weight:700; color:var(--secondary); margin:20px 0 8px; }
+
+  .type-sample { margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid var(--surface-2); }
+  .type-sample:last-child { border-bottom:none; }
+  .type-meta { font-size:10px; color:var(--disabled); margin-top:4px; font-family:monospace; }
+
+  .button-row { display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
+  .button-item { text-align:center; }
+  .button-label { font-size:10px; color:var(--disabled); margin-top:6px; }
+
+  .card-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:16px; }
+  .card { background:var(--bg); border-radius:4px; overflow:hidden; box-shadow:var(--shadow-card); border:1px solid var(--border); }
+  .card-img { height:140px; background:var(--surface); display:flex; align-items:center; justify-content:center; color:var(--disabled); font-size:12px; }
+  .card-body { padding:14px; }
+  .card h3 { font-size:14px; font-weight:400; color:var(--link); margin-bottom:4px; line-height:1.4; }
+  .card-price { font-size:18px; font-weight:700; margin-bottom:4px; }
+  .card-price small { font-size:12px; font-weight:400; vertical-align:super; }
+  .card p { font-size:12px; color:var(--secondary); }
+
+  .form-group { margin-bottom:16px; max-width:400px; }
+  .form-label { display:block; font-size:13px; font-weight:700; margin-bottom:4px; }
+  .form-input { width:100%; background:var(--bg); color:var(--on-bg); border:1px solid var(--border); padding:8px 12px; border-radius:3px; font-family:var(--font); font-size:13px; outline:none; box-shadow:0 1px 2px rgba(15,17,17,0.15) inset; }
+  .form-input--focus { border-color:var(--orange); box-shadow:0 0 0 3px rgba(255,153,0,0.25), 0 1px 2px rgba(15,17,17,0.15) inset; }
+  .form-input--error { border-color:var(--error); }
+  .form-state-label { font-size:9px; color:var(--disabled); margin-top:4px; }
+
+  .spacing-row { display:flex; align-items:flex-end; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
+  .spacing-item { text-align:center; }
+  .spacing-block { background:var(--orange); border-radius:2px; margin-bottom:4px; height:24px; opacity:0.8; }
+  .spacing-value { font-size:9px; color:var(--disabled); font-family:monospace; }
+
+  .radius-row { display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
+  .radius-item { text-align:center; }
+  .radius-box { width:56px; height:56px; background:var(--surface-2); margin-bottom:4px; border:1px solid var(--border); }
+  .radius-label { font-size:9px; color:var(--disabled); font-family:monospace; }
+  .radius-context { font-size:8px; color:var(--disabled); }
+
+  .elevation-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(200px,1fr)); gap:12px; }
+  .elevation-card { background:var(--bg); border-radius:4px; padding:16px; text-align:center; }
+  .elevation-label { font-size:13px; font-weight:700; margin-bottom:4px; }
+  .elevation-desc { font-size:9px; color:var(--disabled); font-family:monospace; }
+
+  .footer { padding:24px; text-align:center; background:var(--navy); font-size:12px; color:#aaa; }
+  .footer a { color:var(--orange); text-decoration:underline; }
+
+  @media (max-width:744px) { .nav-links { display:none; } .section { padding:28px 16px; } .card-grid { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="nav-brand" href="#">amazon<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="#colors">Colors</a></li>
+    <li><a href="#typography">Typography</a></li>
+    <li><a href="#buttons">Buttons</a></li>
+    <li><a href="#cards">Cards</a></li>
+    <li><a href="#forms">Forms</a></li>
+  </ul>
+  <a class="nav-cta" href="#">Sign in</a>
+</nav>
+
+<section class="hero">
+  <h1>Design System Inspired by <span>Amazon</span></h1>
+  <p>A design token catalog generated from DESIGN.md. Every color, font, component, and spacing value — visualized.</p>
+  <div class="hero-buttons">
+    <a class="btn-primary" href="#">Add to Cart</a>
+    <a class="btn-secondary" href="#">Buy Now</a>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<section class="section" id="colors">
+  <div class="section-label">01 / Colors</div><h2 class="section-title">Color Palette</h2>
+  <div class="color-group-label">Brand</div>
+  <div class="color-grid">
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#FF9900"></div><div class="color-swatch-info"><div class="color-swatch-name">Amazon Orange</div><div class="color-swatch-hex">#FF9900</div><div class="color-swatch-role">Primary CTA</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#E47911"></div><div class="color-swatch-info"><div class="color-swatch-name">Orange Dark</div><div class="color-swatch-hex">#E47911</div><div class="color-swatch-role">Hover / pressed</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#232F3E"></div><div class="color-swatch-info"><div class="color-swatch-name">Amazon Navy</div><div class="color-swatch-hex">#232F3E</div><div class="color-swatch-role">Header bg</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#37475A"></div><div class="color-swatch-info"><div class="color-swatch-name">Navy Mid</div><div class="color-swatch-hex">#37475A</div><div class="color-swatch-role">Header hover</div></div></div>
+  </div>
+  <div class="color-group-label">Surface & Text</div>
+  <div class="color-grid">
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#0F1111"></div><div class="color-swatch-info"><div class="color-swatch-name">Near Black</div><div class="color-swatch-hex">#0F1111</div><div class="color-swatch-role">Primary text</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#565959"></div><div class="color-swatch-info"><div class="color-swatch-name">Secondary</div><div class="color-swatch-hex">#565959</div><div class="color-swatch-role">Supporting text</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#007185"></div><div class="color-swatch-info"><div class="color-swatch-name">Teal Link</div><div class="color-swatch-hex">#007185</div><div class="color-swatch-role">Links, titles</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#F7F8F8; border:1px solid #D5D9D9;"></div><div class="color-swatch-info"><div class="color-swatch-name">Surface</div><div class="color-swatch-hex">#F7F8F8</div><div class="color-swatch-role">Page bg</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#D5D9D9"></div><div class="color-swatch-info"><div class="color-swatch-name">Border</div><div class="color-swatch-hex">#D5D9D9</div><div class="color-swatch-role">Dividers</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#CC0C39"></div><div class="color-swatch-info"><div class="color-swatch-name">Error</div><div class="color-swatch-hex">#CC0C39</div><div class="color-swatch-role">Error state</div></div></div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<section class="section" id="typography">
+  <div class="section-label">02 / Typography</div><h2 class="section-title">Typography Scale</h2>
+  <div class="type-sample"><div style="font-size:26px; font-weight:700; line-height:1.3;">Heading — Shop today's deals</div><div class="type-meta">Heading — 26px / 700 / 1.3 / Amazon Ember</div></div>
+  <div class="type-sample"><div style="font-size:20px; font-weight:700; line-height:1.3;">Title — Top picks for you</div><div class="type-meta">Title — 20px / 700 / 1.3</div></div>
+  <div class="type-sample"><div style="font-size:16px; font-weight:400; line-height:1.4; color:var(--link);">Product name — Apple AirPods Pro (2nd Generation)</div><div class="type-meta">Product Title — 16px / 400 / link color</div></div>
+  <div class="type-sample"><div style="font-size:14px; font-weight:400; line-height:1.5; color:var(--secondary);">Body — Fast, free delivery. Easy returns. Shop millions of items.</div><div class="type-meta">Body — 14px / 400 / 1.5</div></div>
+  <div class="type-sample"><div style="font-size:12px; font-weight:400; line-height:1.33; color:var(--secondary);">Label — Ships to: United States — Change</div><div class="type-meta">Label — 12px / 400</div></div>
+  <div class="type-sample"><div style="font-size:11px; font-weight:400; line-height:1.33; color:var(--disabled);">Caption — Usually ships within 2–3 business days</div><div class="type-meta">Caption — 11px / 400</div></div>
+</section>
+
+<hr class="section-divider">
+
+<section class="section" id="buttons">
+  <div class="section-label">03 / Buttons</div><h2 class="section-title">Button Variants</h2>
+  <div class="button-row">
+    <div class="button-item"><a class="btn-primary" href="#">Add to Cart</a><div class="button-label">Primary (Orange)</div></div>
+    <div class="button-item"><a class="btn-secondary" href="#">Add to List</a><div class="button-label">Secondary</div></div>
+    <div class="button-item"><a class="btn-link" href="#">See all results</a><div class="button-label">Link</div></div>
+    <div class="button-item"><span style="display:inline-flex;align-items:center;gap:4px;background:var(--orange);color:var(--on-bg);padding:8px 16px;border-radius:3px;font-size:13px;font-weight:700;border:1px solid #C45500;cursor:pointer;">&#9733; Buy Now</span><div class="button-label">Buy Now</div></div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<section class="section" id="cards">
+  <div class="section-label">04 / Cards</div><h2 class="section-title">Product Cards</h2>
+  <div class="card-grid">
+    <div class="card"><div class="card-img">Product image</div><div class="card-body"><h3>Wireless Headphones — Premium Sound, 30hr Battery</h3><div class="card-price"><small>$</small>79<small>.99</small></div><p>&#11088;&#11088;&#11088;&#11088;&#11088; 4,821 ratings · FREE Delivery</p></div></div>
+    <div class="card"><div class="card-img" style="background:#FFF8EE;">Product image</div><div class="card-body"><h3>Smart Home Hub — Works with Alexa, Google</h3><div class="card-price"><small>$</small>129<small>.00</small></div><p>&#11088;&#11088;&#11088;&#11088; 2,203 ratings · FREE Delivery</p></div></div>
+    <div class="card"><div class="card-img" style="background:#EEF6FF;">Product image</div><div class="card-body"><h3>USB-C Laptop Charger — 65W Fast Charge</h3><div class="card-price"><small>$</small>24<small>.99</small></div><p>&#11088;&#11088;&#11088;&#11088;&#11088; 9,104 ratings · FREE Delivery</p></div></div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<section class="section" id="forms">
+  <div class="section-label">05 / Forms</div><h2 class="section-title">Form Elements</h2>
+  <div class="form-group"><label class="form-label">Search</label><input class="form-input" type="text" placeholder="Search Amazon"><div class="form-state-label">Default</div></div>
+  <div class="form-group"><label class="form-label">Email or mobile number</label><input class="form-input form-input--focus" type="text" value="user@email.com"><div class="form-state-label">Focus (orange ring)</div></div>
+  <div class="form-group"><label class="form-label">Password</label><input class="form-input form-input--error" type="password" value="wrongpass"><div class="form-state-label">Error</div></div>
+</section>
+
+<hr class="section-divider">
+
+<section class="section">
+  <div class="section-label">06 / Spacing</div><h2 class="section-title">Spacing Scale</h2>
+  <div class="spacing-row">
+    <div class="spacing-item"><div class="spacing-block" style="width:4px"></div><div class="spacing-value">4</div></div>
+    <div class="spacing-item"><div class="spacing-block" style="width:8px"></div><div class="spacing-value">8</div></div>
+    <div class="spacing-item"><div class="spacing-block" style="width:12px"></div><div class="spacing-value">12</div></div>
+    <div class="spacing-item"><div class="spacing-block" style="width:16px"></div><div class="spacing-value">16</div></div>
+    <div class="spacing-item"><div class="spacing-block" style="width:24px"></div><div class="spacing-value">24</div></div>
+    <div class="spacing-item"><div class="spacing-block" style="width:32px"></div><div class="spacing-value">32</div></div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<section class="section">
+  <div class="section-label">07 / Radius</div><h2 class="section-title">Border Radius</h2>
+  <div class="radius-row">
+    <div class="radius-item"><div class="radius-box" style="border-radius:3px"></div><div class="radius-label">3px</div><div class="radius-context">Buttons</div></div>
+    <div class="radius-item"><div class="radius-box" style="border-radius:4px"></div><div class="radius-label">4px</div><div class="radius-context">Cards</div></div>
+    <div class="radius-item"><div class="radius-box" style="border-radius:8px"></div><div class="radius-label">8px</div><div class="radius-context">Badges</div></div>
+    <div class="radius-item"><div class="radius-box" style="border-radius:50%; width:56px; height:56px;"></div><div class="radius-label">50%</div><div class="radius-context">Avatar</div></div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<section class="section">
+  <div class="section-label">08 / Elevation</div><h2 class="section-title">Depth</h2>
+  <div class="elevation-grid">
+    <div class="elevation-card" style="border:1px solid var(--border);"><div class="elevation-label">Flat</div><div class="elevation-desc">Border only</div></div>
+    <div class="elevation-card" style="box-shadow:var(--shadow-card);border:1px solid var(--border);"><div class="elevation-label">Card</div><div class="elevation-desc">Product card shadow</div></div>
+    <div class="elevation-card" style="box-shadow:var(--shadow-hover);border:1px solid var(--border);"><div class="elevation-label">Hover</div><div class="elevation-desc">Interactive lift</div></div>
+    <div class="elevation-card" style="box-shadow:0 0 0 3px rgba(255,153,0,0.25);border:1px solid var(--orange);"><div class="elevation-label">Focus</div><div class="elevation-desc">Orange 25% ring</div></div>
+  </div>
+</section>
+
+<footer class="footer">Generated from <a href="https://amazon.com/">amazon.com</a> DESIGN.md — awesome-design-md</footer>
+
+</body>
+</html>
