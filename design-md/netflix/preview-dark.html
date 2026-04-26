@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design System Preview: Netflix (Dark)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #E50914; --red-dark: #B20710; --red-light: #3A0A0A;
+    --bg: #141414; --surface: #1F1F1F; --surface-2: #2A2A2A;
+    --on-bg: #FFFFFF; --secondary: #AAAAAA; --disabled: #555555;
+    --border: #333333; --error: #E50914;
+    --shadow-card: 0 2px 8px rgba(0,0,0,0.5);
+    --shadow-hover: 0 6px 20px rgba(0,0,0,0.7);
+    --font: 'Inter', -apple-system, system-ui, sans-serif;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--on-bg); font-family:var(--font); font-size:14px; font-weight:400; line-height:1.5; -webkit-font-smoothing:antialiased; }
+
+  .nav { position:sticky; top:0; z-index:100; display:flex; align-items:center; justify-content:space-between; padding:14px 24px; background:var(--bg); border-bottom:1px solid var(--border); }
+  .nav-brand { font-size:24px; font-weight:800; color:var(--red); text-decoration:none; letter-spacing:-1px; text-transform:uppercase; }
+  .nav-links { display:flex; gap:24px; list-style:none; }
+  .nav-links a { font-size:14px; font-weight:500; color:var(--secondary); text-decoration:none; }
+  .nav-links a:hover { color:var(--on-bg); }
+  .nav-cta { background:var(--red); color:#fff; padding:8px 20px; border-radius:4px; font-size:14px; font-weight:600; text-decoration:none; }
+
+  .hero { padding:64px 24px; text-align:center; }
+  .hero h1 { font-size:30px; font-weight:800; margin-bottom:12px; letter-spacing:-0.5px; }
+  .hero h1 span { color:var(--red); }
+  .hero p { font-size:16px; color:var(--secondary); max-width:480px; margin:0 auto 24px; }
+  .hero-buttons { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+
+  .btn-primary  { display:inline-flex; align-items:center; gap:8px; background:var(--red); color:#fff; padding:12px 28px; border-radius:4px; font-family:var(--font); font-size:15px; font-weight:700; text-decoration:none; border:none; cursor:pointer; }
+  .btn-secondary { display:inline-flex; align-items:center; gap:8px; background:rgba(109,109,110,0.7); color:#fff; padding:12px 28px; border-radius:4px; font-family:var(--font); font-size:15px; font-weight:700; text-decoration:none; border:none; cursor:pointer; }
+  .btn-outlined { display:inline-block; background:transparent; color:var(--on-bg); padding:12px 28px; border-radius:4px; border:2px solid var(--on-bg); font-family:var(--font); font-size:15px; font-weight:600; text-decoration:none; cursor:pointer; }
+
+  .section { padding:48px 24px; max-width:1100px; margin:0 auto; }
+  .section-label { font-size:11px; font-weight:700; color:var(--secondary); text-transform:uppercase; letter-spacing:1.2px; margin-bottom:8px; }
+  .section-title { font-size:22px; font-weight:800; margin-bottom:24px; letter-spacing:-0.3px; }
+  .section-divider { border:none; border-top:1px solid var(--border); margin:0; }
+
+  .color-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(145px,1fr)); gap:10px; margin-bottom:20px; }
+  .color-swatch { border-radius:8px; overflow:hidden; border:1px solid var(--border); }
+  .color-swatch-block { height:64px; width:100%; }
+  .color-swatch-info { padding:10px; background:var(--surface); }
+  .color-swatch-name { font-size:12px; font-weight:600; margin-bottom:2px; }
+  .color-swatch-hex { font-size:10px; color:var(--secondary); font-family:monospace; }
+  .color-swatch-role { font-size:9px; color:var(--disabled); margin-top:2px; }
+  .color-group-label { font-size:12px; font-weight:700; color:var(--secondary); margin:20px 0 8px; }
+
+  .type-sample { margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid var(--surface-2); }
+  .type-sample:last-child { border-bottom:none; }
+  .type-meta { font-size:10px; color:var(--disabled); margin-top:4px; font-family:monospace; }
+
+  .button-row { display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
+  .button-item { text-align:center; }
+  .button-label { font-size:10px; color:var(--disabled); margin-top:6px; }
+
+  .card-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(200px,1fr)); gap:8px; }
+  .card { background:var(--surface); border-radius:4px; overflow:hidden; box-shadow:var(--shadow-card); }
+  .card-img { height:120px; background:var(--surface-2); display:flex; align-items:center; justify-content:center; color:var(--disabled); font-size:12px; }
+  .card-body { padding:10px; }
+  .card h3 { font-size:13px; font-weight:600; margin-bottom:2px; }
+  .card p { font-size:12px; color:var(--secondary); }
+
+  .form-group { margin-bottom:16px; max-width:400px; }
+  .form-label { display:block; font-size:13px; font-weight:600; margin-bottom:6px; }
+  .form-input { width:100%; background:var(--surface); color:var(--on-bg); border:2px solid var(--border); padding:12px 16px; border-radius:4px; font-family:var(--font); font-size:14px; outline:none; }
+  .form-input--focus { border-color:#888; }
+  .form-input--error { border-color:var(--red); }
+  .form-state-label { font-size:9px; color:var(--disabled); margin-top:4px; }
+
+  .spacing-row { display:flex; align-items:flex-end; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
+  .spacing-item { text-align:center; }
+  .spacing-block { background:var(--red); border-radius:2px; margin-bottom:4px; height:24px; opacity:0.85; }
+  .spacing-value { font-size:9px; color:var(--disabled); font-family:monospace; }
+
+  .radius-row { display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
+  .radius-item { text-align:center; }
+  .radius-box { width:56px; height:56px; background:var(--red-light); margin-bottom:4px; border:2px solid var(--red); }
+  .radius-label { font-size:9px; color:var(--disabled); font-family:monospace; }
+  .radius-context { font-size:8px; color:var(--disabled); }
+
+  .elevation-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(200px,1fr)); gap:12px; }
+  .elevation-card { background:var(--surface); border-radius:4px; padding:16px; text-align:center; }
+  .elevation-label { font-size:13px; font-weight:700; margin-bottom:4px; }
+  .elevation-desc { font-size:9px; color:var(--disabled); font-family:monospace; }
+
+  .footer { padding:24px; text-align:center; border-top:1px solid var(--border); font-size:12px; color:var(--secondary); }
+  .footer a { color:var(--red); text-decoration:underline; }
+
+  @media (max-width:744px) { .nav-links { display:none; } .section { padding:32px 16px; } .card-grid { grid-template-columns:repeat(2,1fr); } }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="nav-brand" href="#">NETFLIX</a>
+  <ul class="nav-links">
+    <li><a href="#colors">Colors</a></li>
+    <li><a href="#typography">Typography</a></li>
+    <li><a href="#buttons">Buttons</a></li>
+    <li><a href="#cards">Cards</a></li>
+    <li><a href="#forms">Forms</a></li>
+  </ul>
+  <a class="nav-cta" href="#">Sign In</a>
+</nav>
+
+<section class="hero">
+  <h1>Design System Inspired by <span>Netflix</span></h1>
+  <p>A design token catalog generated from DESIGN.md. Every color, font, component, and spacing value — visualized.</p>
+  <div class="hero-buttons">
+    <a class="btn-primary" href="#">&#9654; Play</a>
+    <a class="btn-secondary" href="#">&#9432; More Info</a>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<section class="section" id="colors">
+  <div class="section-label">01 / Colors</div><h2 class="section-title">Color Palette</h2>
+  <div class="color-group-label">Brand</div>
+  <div class="color-grid">
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#E50914"></div><div class="color-swatch-info"><div class="color-swatch-name">Netflix Red</div><div class="color-swatch-hex">#E50914</div><div class="color-swatch-role">Primary brand</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#B20710"></div><div class="color-swatch-info"><div class="color-swatch-name">Red Dark</div><div class="color-swatch-hex">#B20710</div><div class="color-swatch-role">Pressed / hover</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#3A0A0A"></div><div class="color-swatch-info"><div class="color-swatch-name">Red Tonal</div><div class="color-swatch-hex">#3A0A0A</div><div class="color-swatch-role">Tonal surface</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:rgba(109,109,110,0.7)"></div><div class="color-swatch-info"><div class="color-swatch-name">More Info</div><div class="color-swatch-hex">rgba(109,109,110,0.7)</div><div class="color-swatch-role">Secondary button</div></div></div>
+  </div>
+  <div class="color-group-label">Surface & Text</div>
+  <div class="color-grid">
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#141414"></div><div class="color-swatch-info"><div class="color-swatch-name">Background</div><div class="color-swatch-hex">#141414</div><div class="color-swatch-role">Page bg</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#1F1F1F"></div><div class="color-swatch-info"><div class="color-swatch-name">Surface</div><div class="color-swatch-hex">#1F1F1F</div><div class="color-swatch-role">Card bg</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#FFFFFF"></div><div class="color-swatch-info"><div class="color-swatch-name">On Background</div><div class="color-swatch-hex">#FFFFFF</div><div class="color-swatch-role">Primary text</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#AAAAAA"></div><div class="color-swatch-info"><div class="color-swatch-name">Secondary</div><div class="color-swatch-hex">#AAAAAA</div><div class="color-swatch-role">Supporting text</div></div></div>
+    <div class="color-swatch"><div class="color-swatch-block" style="background:#333333"></div><div class="color-swatch-info"><div class="color-swatch-name">Border</div><div class="color-swatch-hex">#333333</div><div class="color-swatch-role">Dividers</div></div></div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<section class="section" id="typography">
+  <div class="section-label">02 / Typography</div><h2 class="section-title">Typography Scale</h2>
+  <div class="type-sample"><div style="font-size:30px; font-weight:800; line-height:1.1; letter-spacing:-0.5px;">Display — Unlimited movies, TV shows</div><div class="type-meta">Display — 30px / 800 / -0.5px / Inter</div></div>
+  <div class="type-sample"><div style="font-size:22px; font-weight:800; line-height:1.2; letter-spacing:-0.3px;">Title — Popular on Netflix</div><div class="type-meta">Title — 22px / 800 / -0.3px</div></div>
+  <div class="type-sample"><div style="font-size:16px; font-weight:700; line-height:1.4;">Section — Continue Watching</div><div class="type-meta">Section — 16px / 700</div></div>
+  <div class="type-sample"><div style="font-size:14px; font-weight:400; line-height:1.5; color:var(--secondary);">Body — Watch anywhere. Cancel anytime. Ready to watch? Enter your email to create or restart your membership.</div><div class="type-meta">Body — 14px / 400 / 1.5</div></div>
+  <div class="type-sample"><div style="font-size:12px; font-weight:500; line-height:1.33; color:var(--secondary);">Label — Season 1 · 8 Episodes · 2023</div><div class="type-meta">Label — 12px / 500</div></div>
+  <div class="type-sample"><div style="font-size:11px; font-weight:400; line-height:1.33; color:var(--disabled);">Caption — HD · Dolby Atmos · English</div><div class="type-meta">Caption — 11px / 400</div></div>
+</section>
+
+<hr class="section-divider">
+
+<section class="section" id="buttons">
+  <div class="section-label">03 / Buttons</div><h2 class="section-title">Button Variants</h2>
+  <div class="button-row">
+    <div class="button-item"><a class="btn-primary" href="#">&#9654; Play</a><div class="button-label">Play (Red)</div></div>
+    <div class="button-item"><a class="btn-secondary" href="#">&#9432; More Info</a><div class="button-label">More Info</div></div>
+    <div class="button-item"><a class="btn-outlined" href="#">My List</a><div class="button-label">Outlined</div></div>
+    <div class="button-item"><span style="display:inline-flex;align-items:center;justify-content:center;background:var(--red);color:#fff;width:44px;height:44px;border-radius:50%;font-size:20px;cursor:pointer;">&#9654;</span><div class="button-label">Play icon</div></div>
+    <div class="button-item"><span style="display:inline-flex;align-items:center;gap:4px;background:var(--surface);border:1px solid var(--border);padding:6px 14px;border-radius:4px;font-size:12px;font-weight:600;cursor:pointer;">&#43; My List</span><div class="button-label">Add</div></div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<section class="section" id="cards">
+  <div class="section-label">04 / Cards</div><h2 class="section-title">Content Cards</h2>
+  <div class="card-grid">
+    <div class="card"><div class="card-img">Thumbnail</div><div class="card-body"><h3>Stranger Things</h3><p>Sci-Fi · S4 · 2022</p></div></div>
+    <div class="card"><div class="card-img" style="background:#2A2A2A;">Thumbnail</div><div class="card-body"><h3>The Crown</h3><p>Drama · S6 · 2023</p></div></div>
+    <div class="card"><div class="card-img" style="background:#3A1A1A;">Thumbnail</div><div class="card-body"><h3>Wednesday</h3><p>Comedy · S1 · 2022</p></div></div>
+    <div class="card"><div class="card-img" style="background:#1A2A1A;">Thumbnail</div><div class="card-body"><h3>Squid Game</h3><p>Thriller · S2 · 2024</p></div></div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<section class="section" id="forms">
+  <div class="section-label">05 / Forms</div><h2 class="section-title">Form Elements</h2>
+  <div class="form-group"><label class="form-label">Email address</label><input class="form-input" type="text" placeholder="Email address"><div class="form-state-label">Default</div></div>
+  <div class="form-group"><label class="form-label">Password</label><input class="form-input form-input--focus" type="password" value="••••••••"><div class="form-state-label">Focus</div></div>
+  <div class="form-group"><label class="form-label">Email address</label><input class="form-input form-input--error" type="text" value="not-an-email"><div class="form-state-label">Error</div></div>
+</section>
+
+<hr class="section-divider">
+
+<section class="section">
+  <div class="section-label">06 / Spacing</div><h2 class="section-title">Spacing Scale</h2>
+  <div class="spacing-row">
+    <div class="spacing-item"><div class="spacing-block" style="width:4px"></div><div class="spacing-value">4</div></div>
+    <div class="spacing-item"><div class="spacing-block" style="width:8px"></div><div class="spacing-value">8</div></div>
+    <div class="spacing-item"><div class="spacing-block" style="width:12px"></div><div class="spacing-value">12</div></div>
+    <div class="spacing-item"><div class="spacing-block" style="width:16px"></div><div class="spacing-value">16</div></div>
+    <div class="spacing-item"><div class="spacing-block" style="width:24px"></div><div class="spacing-value">24</div></div>
+    <div class="spacing-item"><div class="spacing-block" style="width:32px"></div><div class="spacing-value">32</div></div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<section class="section">
+  <div class="section-label">07 / Radius</div><h2 class="section-title">Border Radius</h2>
+  <div class="radius-row">
+    <div class="radius-item"><div class="radius-box" style="border-radius:2px"></div><div class="radius-label">2px</div><div class="radius-context">Progress</div></div>
+    <div class="radius-item"><div class="radius-box" style="border-radius:4px"></div><div class="radius-label">4px</div><div class="radius-context">Buttons / Cards</div></div>
+    <div class="radius-item"><div class="radius-box" style="border-radius:8px"></div><div class="radius-label">8px</div><div class="radius-context">Modal</div></div>
+    <div class="radius-item"><div class="radius-box" style="border-radius:50%; width:56px; height:56px;"></div><div class="radius-label">50%</div><div class="radius-context">Avatar</div></div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<section class="section">
+  <div class="section-label">08 / Elevation</div><h2 class="section-title">Depth</h2>
+  <div class="elevation-grid">
+    <div class="elevation-card" style="border:1px solid var(--border);"><div class="elevation-label">Flat</div><div class="elevation-desc">Border only</div></div>
+    <div class="elevation-card" style="box-shadow:var(--shadow-card);"><div class="elevation-label">Card</div><div class="elevation-desc">0 2px 8px rgba(0,0,0,0.5)</div></div>
+    <div class="elevation-card" style="box-shadow:var(--shadow-hover);"><div class="elevation-label">Hover</div><div class="elevation-desc">0 6px 20px rgba(0,0,0,0.7)</div></div>
+    <div class="elevation-card" style="box-shadow:0 0 0 2px var(--red);"><div class="elevation-label">Focus</div><div class="elevation-desc">Red 2px ring</div></div>
+  </div>
+</section>
+
+<footer class="footer">Generated from <a href="https://netflix.com/">netflix.com</a> DESIGN.md — awesome-design-md</footer>
+
+</body>
+</html>
